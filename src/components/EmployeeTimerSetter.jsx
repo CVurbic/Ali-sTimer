@@ -17,7 +17,7 @@ function EmployeeTimerSetter() {
             setShowToast({ stanje: true, vrijeme: time });
             setTimeout(() => {
                 setShowToast(false);
-            }, 3000); // Sakrij toast nakon 3 sekunde
+            }, 5000); // Sakrij toast nakon 3 sekunde
         }
     }
 
