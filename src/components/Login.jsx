@@ -39,7 +39,6 @@ export default function Login() {
         if (session === null) localStorage.removeItem("userInfo");
         else saveUser();
 
-        console.log(session)
         // eslint-disable-next-line
     }, [session]);
 
@@ -51,7 +50,6 @@ export default function Login() {
             .from("profiles")
             .select("*")
             .eq("id", user.data.user.id);
-        console.log(data[0])
         if (data && data[0]) {
             localStorage.setItem("userInfo", JSON.stringify(data[0]));
             navigate("/")

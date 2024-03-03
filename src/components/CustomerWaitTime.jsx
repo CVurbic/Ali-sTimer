@@ -4,7 +4,7 @@ import lepinja from "../assets/classic-kebab-lepinja.jpg";
 
 function CustomerWaitTime({ waitTimes }) {
     return (
-        <div className="min-h-screen flex items-center justify-center bg-brown-100 ">
+        <div className="min-h-screen flex items-center justify-center ">
             <div className="bg-amber-100 p-8 rounded-lg shadow-xl text-center space-y-6 relative">
                 <h1 className="text-4xl font-bold text-brown-900">
                     Estimated Wait Time <br /> <span className="text-lg">Procijenjeno Vrijeme Čekanja</span>
@@ -19,7 +19,7 @@ function CustomerWaitTime({ waitTimes }) {
                 </div>
                 <div className="text-2xl font-semibold text-yellow-600">
                     <p>Approximately / Otprilike</p>
-                    <p className="text-6xl">{waitTimes[5].wait_time} min</p>
+                    <p className="text-6xl">{waitTimes.wait_time} min</p>
                 </div>
                 <p className="text-brown-700">
                     <span className="block font-bold">Your patience is appreciated.</span>

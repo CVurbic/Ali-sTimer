@@ -10,29 +10,33 @@ import EmployeeTimerSetter from './components/EmployeeTimerSetter.jsx';
 
 function App() {
 
-  const [waitTimes, setWaitTimes] = useState([])
+  const [waitTimes, setWaitTimes] = useState()
   const [userLogged, setUserLogged] = useState(false)
   const [userInfo, setUserInfo] = useState()
 
 
 
   useEffect(() => {
-    console.log(" je okinut 111")
     let userInfo = localStorage.getItem("userInfo");
-    console.log("userInfo", userInfo)
 
     if (userInfo) {
-      console.log(userInfo, " je okinut")
       setUserInfo(userInfo)
       setUserLogged(true)
     }
 
+    let timer = setInterval(async () => {
+      await fetchWaitTimes();
+
+    }, 30000)
+
     fetchWaitTimes();
     // eslint-disable-next-line
+    return () => {
+      clearInterval(timer);
+    };
   }, []);
 
   useEffect(() => {
-    console.log(userInfo)
 
 
   }, [userInfo])
@@ -46,12 +50,12 @@ function App() {
   }
 
   async function fetchWaitTimes() {
-
     let { data: alisTimer } = await supabase
       .from('alisTimer')
       .select('*')
-    setWaitTimes(alisTimer);
 
+
+    setWaitTimes(alisTimer[0]);
   }
 
   return (
@@ -60,20 +64,17 @@ function App() {
         className="absolute inset-0 bg-cover bg-center bg-no-repeat filter blur-sm"
         style={{ backgroundImage: `url(${bgAli})` }}
       ></div>
-      {waitTimes && waitTimes.length > 0 &&
+      {waitTimes &&
         <div className={`123123 relative ${!userLogged ? "" : "hidden"}`}>
           <CustomerWaitTime
             waitTimes={waitTimes}
           />
         </div>
       }
-      {waitTimes && waitTimes.length > 0 &&
-        <div className={`h-screen flex justify-center items-center absolute ${userLogged ? "" : "hidden"}`}>
-          <EmployeeTimerSetter
-            waitTimes={waitTimes}
-          />
-        </div>
-      }
+      <div className={`h-screen w-screen flex justify-center items-center absolute ${userLogged ? "" : "hidden"}`}>
+        <EmployeeTimerSetter
+        />
+      </div>
 
       <div className='fixed bottom-4 right-4'>
         {!userLogged &&
