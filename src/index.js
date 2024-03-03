@@ -2,8 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import './index.css';
-import Login from './components/Login';
+
+
+import Login from './components/Login.jsx';
 import App from './App';
+import EmployeeTimerSetter from './components/EmployeeTimerSetter';
+
+import bgAli from "./assets/aliBg.avif"
+
 
 
 
@@ -15,6 +21,9 @@ const router = createBrowserRouter([
   }, {
     path: "/",
     element: <App />,
+  }, {
+    path: "/setTime",
+    element: <EmployeeTimerSetter />,
   },
 
 ]);
@@ -23,7 +32,10 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <React.StrictMode>
-    <div className='fixed top-0 left-0 bg-[#e2d7ce] w-screen h-screen -z-50' />
+    <div
+      className="absolute inset-0 bg-cover bg-center bg-no-repeat filter blur-sm -z-50"
+      style={{ backgroundImage: `url(${bgAli})` }}
+    ></div>
     <RouterProvider router={router} />
   </React.StrictMode>
 );

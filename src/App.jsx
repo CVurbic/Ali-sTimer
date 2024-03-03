@@ -4,29 +4,44 @@ import bgAli from "./assets/aliBg.avif"
 import { supabase } from "./supabaseClient"
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import EmployeeTimerSetter from './components/EmployeeTimerSetter.jsx';
+
+
 
 function App() {
 
-  const [waitTimes, setWetTimes] = useState([])
+  const [waitTimes, setWaitTimes] = useState([])
   const [userLogged, setUserLogged] = useState(false)
-
+  const [userInfo, setUserInfo] = useState()
 
 
 
   useEffect(() => {
-    fetchWaitTimes();
-  }, [])
-
-  useEffect(() => {
+    console.log(" je okinut 111")
     let userInfo = localStorage.getItem("userInfo");
+    console.log("userInfo", userInfo)
 
-    if (userInfo) setUserLogged(true)
+    if (userInfo) {
+      console.log(userInfo, " je okinut")
+      setUserInfo(userInfo)
+      setUserLogged(true)
+    }
+
+    fetchWaitTimes();
     // eslint-disable-next-line
   }, []);
 
+  useEffect(() => {
+    console.log(userInfo)
+
+
+  }, [userInfo])
+
+
   async function logout() {
     await supabase.auth.signOut();
-    localStorage.setItem("userInfo", null);
+    localStorage.removeItem("userInfo");
+    setUserInfo(undefined)
     setUserLogged(false)
   }
 
@@ -35,7 +50,7 @@ function App() {
     let { data: alisTimer } = await supabase
       .from('alisTimer')
       .select('*')
-    setWetTimes(alisTimer);
+    setWaitTimes(alisTimer);
 
   }
 
@@ -45,14 +60,22 @@ function App() {
         className="absolute inset-0 bg-cover bg-center bg-no-repeat filter blur-sm"
         style={{ backgroundImage: `url(${bgAli})` }}
       ></div>
-      <div className="relative z-10">
-        {waitTimes && waitTimes.length > 0 &&
+      {waitTimes && waitTimes.length > 0 &&
+        <div className={`123123 relative ${!userLogged ? "" : "hidden"}`}>
           <CustomerWaitTime
             waitTimes={waitTimes}
-          />}
-      </div>
+          />
+        </div>
+      }
+      {waitTimes && waitTimes.length > 0 &&
+        <div className={`h-screen flex justify-center items-center absolute ${userLogged ? "" : "hidden"}`}>
+          <EmployeeTimerSetter
+            waitTimes={waitTimes}
+          />
+        </div>
+      }
 
-      <div className='fixed bottom-4 right-4 z-50'>
+      <div className='fixed bottom-4 right-4'>
         {!userLogged &&
           <Link
             to="/login"
@@ -61,7 +84,7 @@ function App() {
             Login
           </Link>
         }
-        {userLogged &&
+        {userLogged && userInfo &&
 
           <button onClick={logout}
             className=""
@@ -71,7 +94,7 @@ function App() {
         }
       </div>
 
-    </div>
+    </div >
   );
 }
 

@@ -38,6 +38,8 @@ export default function Login() {
     useEffect(() => {
         if (session === null) localStorage.removeItem("userInfo");
         else saveUser();
+
+        console.log(session)
         // eslint-disable-next-line
     }, [session]);
 
@@ -52,10 +54,8 @@ export default function Login() {
         console.log(data[0])
         if (data && data[0]) {
             localStorage.setItem("userInfo", JSON.stringify(data[0]));
-        }
-        if (data[0].role === "vlasnik") {
-            navigate("/adminhome")
-        } else navigate(-1);
+            navigate("/")
+        } else navigate("/");
     }
 
     const handleLogin = async (e) => {
@@ -73,6 +73,7 @@ export default function Login() {
         }
 
         setLoginError(null); // Reset login error
+        await saveUser()
     };
 
 
