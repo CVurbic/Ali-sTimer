@@ -36,14 +36,14 @@ function EmployeeTimerSetter() {
     }
 
     return (
-        <div className="bg-amber-100 rounded-xl grid grid-cols-2 gap-8 w-4/5 md:w-2/3 lg:w-1/2 min-h-fit justify-items-center p-8 md:grid-cols-3">
+        <div className="bg-amber-100 rounded-xl grid grid-cols-2 gap-4 md:gap-8 w-4/5 md:w-2/3 lg:w-1/2 min-h-fit justify-items-center p-8 md:grid-cols-3">
             {waitTimes.map((time, index) => (
                 <button
                     key={index}
-                    className={`text-white bg-opacity-95 w-40 font-bold py-3 px-6 md:py-6 md:px-12 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 ${index % 2 === 0 ? 'bg-yellow-600' : 'bg-[#3D2C29]'}`}
+                    className={`text-white  bg-opacity-95 font-bold w-full h-16 md:w-40 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 ${index % 2 === 0 ? 'bg-yellow-600' : 'bg-[#3D2C29]'}`}
                     onClick={() => sendTimeSupa(time)}
                 >
-                    {time}
+                    {time} min
                 </button>
             ))}
 
@@ -54,7 +54,7 @@ function EmployeeTimerSetter() {
                         type="number"
                         value={customTime}
                         onChange={handleCustomTimeChange}
-                        className="ml-2 border border-gray-300 rounded px-2 py-1 focus:outline-none"
+                        className="ml-2 w-11/12 border border-gray-300 rounded px-2 py-1 focus:outline-none"
                     />
                 </label>
                 <button
