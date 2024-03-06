@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
 
 function EmployeeTimerSetter() {
-    const [customTime, setCustomTime] = useState('');
+    // const [customTime, setCustomTime] = useState('');
     const [showToast, setShowToast] = useState({ stanje: false, vrijeme: undefined });
-    const waitTimes = [5, 10, 15, 20, 25, 30];
+    const waitTimes = [5, 10, 15, 20];
+    const [currentActiveTime, setCurrentActiveTime] = useState()
+
+    useEffect(()=>{
+        fetchSupaTimes();
+    },[])
 
     async function sendTimeSupa(time) {
         const { error } = await supabase
@@ -15,13 +20,23 @@ function EmployeeTimerSetter() {
             console.log(error);
         } else {
             setShowToast({ stanje: true, vrijeme: time });
+            setCurrentActiveTime(time)
             setTimeout(() => {
                 setShowToast(false);
             }, 5000); // Sakrij toast nakon 3 sekunde
         }
     }
 
-    function handleCustomTimeChange(event) {
+    async function fetchSupaTimes(){
+        const{data,error} = await supabase
+        .from("alisTimer")
+        .select("*")
+
+        if(error) console.error(error)
+        else setCurrentActiveTime(data[0].wait_time)
+    }
+
+ /*    function handleCustomTimeChange(event) {
         setCustomTime(event.target.value);
     }
 
@@ -33,21 +48,29 @@ function EmployeeTimerSetter() {
         } else {
             alert("Invalid input. Please enter a valid number.");
         }
-    }
+    } */
 
     return (
-        <div className="bg-amber-100 rounded-xl grid grid-cols-2 gap-4 md:gap-8 w-4/5 md:w-2/3 lg:w-1/2 min-h-fit justify-items-center p-8 md:grid-cols-3">
-            {waitTimes.map((time, index) => (
-                <button
-                    key={index}
-                    className={`text-white  bg-opacity-95 font-bold w-full h-16 md:w-40 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 ${index % 2 === 0 ? 'bg-yellow-600' : 'bg-[#3D2C29]'}`}
-                    onClick={() => sendTimeSupa(time)}
-                >
-                    {time} min
-                </button>
-            ))}
+        <div className="bg-amber-100 rounded-xl flex flex-col gap-4 md:gap-8 w-4/5 md:w-2/3 lg:w-1/2 min-h-fit justify-items-center p-8 md:grid-cols-3">
+          {currentActiveTime &&
 
-            <div className="col-span-2 md:col-span-3 flex justify-center items-end ">
+<h1 className="text-2xl font-semibold text-yellow-600">Trenutno aktivno vrijeme je: <br /><span className="text-5xl"> {currentActiveTime} min</span> </h1>
+          }
+           
+            <div className='w-full flex flex-wrap justify-center items-center gap-4'>
+
+                {waitTimes.map((time, index) => (
+                    <button
+                        key={index}
+                        className={`text-white  bg-opacity-95 font-bold w-[40%] h-16 md:w-40 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 ${index % 2 === 0 ? 'bg-yellow-600' : 'bg-[#3D2C29]'}`}
+                        onClick={() => sendTimeSupa(time)}
+                    >
+                        {time} min
+                    </button>
+                ))}
+            </div>
+
+            {/* <div className="col-span-2 md:col-span-3 flex justify-center items-end ">
                 <label className="text-gray-800 flex flex-col ">
                     Custom Wait Time:
                     <input
@@ -63,7 +86,7 @@ function EmployeeTimerSetter() {
                 >
                     Postavi
                 </button>
-            </div>
+            </div> */}
 
             {showToast.stanje && (
                 <div className="fixed top-4 right-4 p-4 rounded-lg bg-green-600 shadow-xl text-white border">
