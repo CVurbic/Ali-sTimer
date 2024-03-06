@@ -20,7 +20,6 @@ function App() {
   const navigate = useNavigate()
   useEffect(() => {
     let userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    console.log(userInfo)
     if (userInfo) {
       setUserInfo(userInfo)
       setPoslovnica(userInfo.lokacija)
@@ -58,7 +57,6 @@ function App() {
       .select('*')
       .eq("poslovnica", poslovnica)
 
-    console.log(alisTimer)
     setWaitTimes(alisTimer[0]);
   }
 
