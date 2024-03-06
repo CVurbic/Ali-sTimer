@@ -3,9 +3,9 @@ import CustomerWaitTime from "./components/CustomerWaitTime.jsx"
 import bgAli from "./assets/aliBg.avif"
 import { supabase } from "./supabaseClient"
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import EmployeeTimerSetter from './components/EmployeeTimerSetter.jsx';
-
+import WithAuth from "./components/WithAuth"
 
 
 function App() {
@@ -13,38 +13,40 @@ function App() {
   const [waitTimes, setWaitTimes] = useState()
   const [userLogged, setUserLogged] = useState(false)
   const [userInfo, setUserInfo] = useState()
+  const [poslovnica, setPoslovnica] = useState()
+  const [changeWaitTime, setChangeWaitTime] = useState(false)
 
 
-
+  const navigate = useNavigate()
   useEffect(() => {
-    let userInfo = localStorage.getItem("userInfo");
-
+    let userInfo = JSON.parse(localStorage.getItem("userInfo"));
     if (userInfo) {
       setUserInfo(userInfo)
+      setPoslovnica(userInfo.lokacija)
       setUserLogged(true)
     }
 
-    let timer = setInterval(async () => {
-      await fetchWaitTimes();
-
-    }, 30000)
-
-    fetchWaitTimes();
     // eslint-disable-next-line
-    return () => {
-      clearInterval(timer);
-    };
   }, []);
 
   useEffect(() => {
-
-
-  }, [userInfo])
+    if (userInfo) {
+      fetchWaitTimes();
+      let timer = setInterval(async () => {
+        await fetchWaitTimes();
+      }, 30000);
+      return () => {
+        clearInterval(timer);
+      };
+    }
+    // eslint-disable-next-line
+  }, [userInfo]);
 
 
   async function logout() {
     await supabase.auth.signOut();
     localStorage.removeItem("userInfo");
+    navigate("/login")
     setUserInfo(undefined)
     setUserLogged(false)
   }
@@ -53,7 +55,7 @@ function App() {
     let { data: alisTimer } = await supabase
       .from('alisTimer')
       .select('*')
-
+      .eq("poslovnica", poslovnica)
 
     setWaitTimes(alisTimer[0]);
   }
@@ -64,32 +66,42 @@ function App() {
         className="absolute inset-0 bg-cover bg-center bg-no-repeat filter blur-sm"
         style={{ backgroundImage: `url(${bgAli})` }}
       ></div>
-      {waitTimes &&
-        <div className={`123123 relative ${!userLogged ? "" : "hidden"}`}>
+      {waitTimes && !changeWaitTime &&
+        <div className={`relative ${!changeWaitTime ? "" : "hidden"}`}>
           <CustomerWaitTime
             waitTimes={waitTimes}
           />
         </div>
-      }
-      <div className={`h-screen w-screen flex justify-center items-center absolute ${userLogged ? "" : "hidden"}`}>
-        <EmployeeTimerSetter
-        />
-      </div>
 
-      <div className='fixed bottom-4 right-4'>
-        {!userLogged &&
-          <Link
-            to="/login"
-            className="no-underline text-slate-100  hover:text-slate-400"
-          >
-            Login
-          </Link>
+      }
+      {waitTimes && changeWaitTime &&
+        <div className={`h-screen w-screen flex justify-center items-center absolute ${changeWaitTime ? "" : "hidden"}`}>
+          <EmployeeTimerSetter
+            currentTime={waitTimes}
+          />
+        </div>
+      }
+
+
+      <div className='fixed bottom-4 right-4 flex gap-3'>
+        {!changeWaitTime &&
+          <button onClick={() => setChangeWaitTime(true)}
+          className='px-4 py-2 border font-semibold border-yellow-600 text-white bg-yellow-600 hover:bg-yellow-600 hover:border-yellow-800 hover:text-amber-200 rounded-md'>
+          
+            Promijeni vrijeme čekanja
+          </button>
+        }
+        {changeWaitTime &&
+          <button onClick={() => setChangeWaitTime(false)} 
+          className='px-4 py-2 border font-semibold border-yellow-600 bg-yellow-600 text-white hover:bg-yellow-600 hover:border-yellow-800 hover:text-amber-200 rounded-md'>
+            Pregled za goste
+          </button>
         }
         {userLogged && userInfo &&
 
           <button onClick={logout}
-            className=""
-          >
+          className='px-4 py-2  font-semibold  bg-orange-950 text-white  hover:text-amber-200 rounded-md'>
+          
             Logout
           </button>
         }
@@ -99,4 +111,4 @@ function App() {
   );
 }
 
-export default App;
+export default WithAuth(App, false);

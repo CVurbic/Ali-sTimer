@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
 
-function EmployeeTimerSetter() {
+function EmployeeTimerSetter({currentTime}) {
+    console.log(currentTime)
     // const [customTime, setCustomTime] = useState('');
     const [showToast, setShowToast] = useState({ stanje: false, vrijeme: undefined });
     const waitTimes = [5, 10, 15, 20];
     const [currentActiveTime, setCurrentActiveTime] = useState()
 
     useEffect(()=>{
-        fetchSupaTimes();
+        if(currentTime) setCurrentActiveTime(currentTime.wait_time)
+        // eslint-disable-next-line
     },[])
 
     async function sendTimeSupa(time) {
@@ -27,14 +29,7 @@ function EmployeeTimerSetter() {
         }
     }
 
-    async function fetchSupaTimes(){
-        const{data,error} = await supabase
-        .from("alisTimer")
-        .select("*")
-
-        if(error) console.error(error)
-        else setCurrentActiveTime(data[0].wait_time)
-    }
+   
 
  /*    function handleCustomTimeChange(event) {
         setCustomTime(event.target.value);
@@ -62,7 +57,7 @@ function EmployeeTimerSetter() {
                 {waitTimes.map((time, index) => (
                     <button
                         key={index}
-                        className={`text-white  bg-opacity-95 font-bold w-[40%] h-16 md:w-40 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 ${index % 2 === 0 ? 'bg-yellow-600' : 'bg-[#3D2C29]'}`}
+                        className={`text-white  bg-opacity-95 font-bold w-[40%] h-16 md:w-40 rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 ${index % 2 === 0 ? 'bg-yellow-600' : 'bg-orange-950'}`}
                         onClick={() => sendTimeSupa(time)}
                     >
                         {time} min
@@ -90,7 +85,7 @@ function EmployeeTimerSetter() {
 
             {showToast.stanje && (
                 <div className="fixed top-4 right-4 p-4 rounded-lg bg-green-600 shadow-xl text-white border">
-                    Uspješno postavljanje vremena čekanja na {showToast.vrijeme}min!
+                    Uspješno postavljanje vremena čekanja na {showToast.vrijeme} min!
                 </div>
             )}
         </div>
