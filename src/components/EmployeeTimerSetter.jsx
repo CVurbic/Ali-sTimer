@@ -49,7 +49,7 @@ function EmployeeTimerSetter({currentTime}) {
         <div className="bg-amber-100 rounded-xl flex flex-col gap-4 md:gap-8 w-4/5 md:w-2/3 lg:w-1/2 min-h-fit justify-items-center p-8 md:grid-cols-3">
           {currentActiveTime &&
 
-<h1 className="text-2xl font-semibold text-yellow-600">Trenutno aktivno vrijeme je: <br /><span className="text-5xl"> {currentActiveTime} min</span> </h1>
+<h1 className="text-2xl font-semibold text-yellow-600">Trenutno aktivno vrijeme čekanja je: <br /><span className="text-5xl"> {currentActiveTime} min</span> </h1>
           }
            
             <div className='w-full flex flex-wrap justify-center items-center gap-4'>
