@@ -62,10 +62,9 @@ function App() {
 
   return (
     <div className="App relative">
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat filter blur-sm"
-        style={{ backgroundImage: `url(${bgAli})` }}
-      ></div>
+      <div className='fixed top-2 right-4'>
+        <p className='font-medium text-amber-300'>{poslovnica}</p>
+      </div>
       {waitTimes && !changeWaitTime &&
         <div className={`relative ${!changeWaitTime ? "" : "hidden"}`}>
           <CustomerWaitTime
