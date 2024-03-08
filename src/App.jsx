@@ -1,6 +1,5 @@
 import './App.css';
 import CustomerWaitTime from "./components/CustomerWaitTime.jsx"
-import bgAli from "./assets/aliBg.avif"
 import { supabase } from "./supabaseClient"
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
