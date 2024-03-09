@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EmployeeTimerSetter from './components/EmployeeTimerSetter.jsx';
 import WithAuth from "./components/WithAuth"
+import { TbSettingsDown } from "react-icons/tb";
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
   const [userInfo, setUserInfo] = useState()
   const [poslovnica, setPoslovnica] = useState()
   const [changeWaitTime, setChangeWaitTime] = useState(false)
+  const [showSettings, setShowSettings] = useState(false)
 
 
   const navigate = useNavigate()
@@ -80,30 +82,34 @@ function App() {
         </div>
       }
 
+      <TbSettingsDown
+        className={`w-8 h-8 fixed cursor-pointer text-amber-300 TbSettingsDown ${showSettings ? " bottom-16 " : " bottom-4 "} right-4`}
+        onClick={() => setShowSettings(!showSettings)}
+      />
+      {showSettings &&
+        <div className={` TbSettingsDown fixed bottom-4 right-4 flex gap-3 ${showSettings ? '' : 'hidden'}`}>
+          {!changeWaitTime &&
+            <button onClick={() => setChangeWaitTime(true)}
+              className='px-4 py-2 border font-semibold border-yellow-600 text-white bg-yellow-600 hover:bg-yellow-600 hover:border-yellow-800 hover:text-amber-200 rounded-md'>
 
-      <div className='fixed bottom-4 right-4 flex gap-3'>
-        {!changeWaitTime &&
-          <button onClick={() => setChangeWaitTime(true)}
-          className='px-4 py-2 border font-semibold border-yellow-600 text-white bg-yellow-600 hover:bg-yellow-600 hover:border-yellow-800 hover:text-amber-200 rounded-md'>
-          
-            Promijeni vrijeme čekanja
-          </button>
-        }
-        {changeWaitTime &&
-          <button onClick={() => setChangeWaitTime(false)} 
-          className='px-4 py-2 border font-semibold border-yellow-600 bg-yellow-600 text-white hover:bg-yellow-600 hover:border-yellow-800 hover:text-amber-200 rounded-md'>
-            Pregled za goste
-          </button>
-        }
-        {userLogged && userInfo &&
+              Promijeni vrijeme čekanja
+            </button>
+          }
+          {changeWaitTime &&
+            <button onClick={() => setChangeWaitTime(false)}
+              className='px-4 py-2 border font-semibold border-yellow-600 bg-yellow-600 text-white hover:bg-yellow-600 hover:border-yellow-800 hover:text-amber-200 rounded-md'>
+              Pregled za goste
+            </button>
+          }
+          {userLogged && userInfo &&
 
-          <button onClick={logout}
-          className='px-4 py-2  font-semibold  bg-orange-950 text-white  hover:text-amber-200 rounded-md'>
-          
-            Logout
-          </button>
-        }
-      </div>
+            <button onClick={logout}
+              className=' px-4 py-2  font-semibold  bg-orange-950 text-white  hover:text-amber-200 rounded-md'>
+
+              Logout
+            </button>
+          }
+        </div>}
 
     </div >
   );
