@@ -35,7 +35,7 @@ function App() {
       fetchWaitTimes();
       let timer = setInterval(async () => {
         await fetchWaitTimes();
-      }, 30000);
+      }, 5000);
       return () => {
         clearInterval(timer);
       };
@@ -54,10 +54,11 @@ function App() {
 
   async function fetchWaitTimes() {
     let { data: alisTimer } = await supabase
-      .from('alisTimer')
+      .from('waitTime')
       .select('*')
       .eq("poslovnica", poslovnica)
 
+    console.log(alisTimer)
     setWaitTimes(alisTimer[0]);
   }
 
