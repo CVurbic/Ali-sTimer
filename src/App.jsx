@@ -3,9 +3,7 @@ import CustomerWaitTime from "./components/CustomerWaitTime.jsx"
 import { supabase } from "./supabaseClient"
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import EmployeeTimerSetter from './components/EmployeeTimerSetter.jsx';
 import WithAuth from "./components/WithAuth"
-import { TbSettingsDown } from "react-icons/tb";
 
 
 function App() {
@@ -14,7 +12,6 @@ function App() {
   const [userLogged, setUserLogged] = useState(false)
   const [userInfo, setUserInfo] = useState()
   const [poslovnica, setPoslovnica] = useState()
-  const [changeWaitTime, setChangeWaitTime] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
 
 
@@ -64,53 +61,29 @@ function App() {
 
   return (
     <div className="App relative">
-      <div className='fixed top-2 right-4'>
-        <p className='font-medium text-amber-300'>{poslovnica}</p>
+      <div className='flex gap-2 justify-center items-center fixed top-2 right-4  z-[999]' >
+        {userLogged && userInfo &&
+
+          <button onClick={logout}
+            className={`${showSettings ? "opacity-100" : "opacity-0 pointer-events-none"} transition-opacity duration-500 px-4 py-2  font-semibold  bg-orange-950 text-white  hover:text-amber-200 rounded-md`}
+          >
+
+            Logout
+          </button>
+        }
+        <p className='font-medium text-amber-300 cursor-pointer py-4 px-4 z-[559]' onClick={() => setShowSettings(!showSettings)}>{poslovnica}</p>
+
       </div>
-      {waitTimes && !changeWaitTime &&
-        <div className={`relative ${!changeWaitTime ? "" : "hidden"}`}>
-          <CustomerWaitTime
-            waitTimes={waitTimes}
-          />
-        </div>
+      {waitTimes &&
+        <CustomerWaitTime
+          waitTimes={waitTimes}
+        />
 
       }
-      {waitTimes && changeWaitTime &&
-        <div className={`h-screen w-screen flex justify-center items-center absolute ${changeWaitTime ? "" : "hidden"}`}>
-          <EmployeeTimerSetter
-            currentTime={waitTimes}
-          />
-        </div>
-      }
 
-      <TbSettingsDown
-        className={`w-8 h-8 fixed cursor-pointer text-amber-300 TbSettingsDown ${showSettings ? " bottom-16 " : " bottom-4 "} right-4`}
-        onClick={() => setShowSettings(!showSettings)}
-      />
-      {showSettings &&
-        <div className={` TbSettingsDown fixed bottom-4 right-4 flex gap-3 ${showSettings ? '' : 'hidden'}`}>
-          {!changeWaitTime &&
-            <button onClick={() => setChangeWaitTime(true)}
-              className='px-4 py-2 border font-semibold border-yellow-600 text-white bg-yellow-600 hover:bg-yellow-600 hover:border-yellow-800 hover:text-amber-200 rounded-md'>
 
-              Promijeni vrijeme čekanja
-            </button>
-          }
-          {changeWaitTime &&
-            <button onClick={() => setChangeWaitTime(false)}
-              className='px-4 py-2 border font-semibold border-yellow-600 bg-yellow-600 text-white hover:bg-yellow-600 hover:border-yellow-800 hover:text-amber-200 rounded-md'>
-              Pregled za goste
-            </button>
-          }
-          {userLogged && userInfo &&
 
-            <button onClick={logout}
-              className=' px-4 py-2  font-semibold  bg-orange-950 text-white  hover:text-amber-200 rounded-md'>
 
-              Logout
-            </button>
-          }
-        </div>}
 
     </div >
   );
